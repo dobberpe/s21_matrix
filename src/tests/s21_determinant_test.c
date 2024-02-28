@@ -113,6 +113,26 @@ START_TEST(s21_determinant_inf_neg) {
 }
 END_TEST
 
+void s21_init_matrix(double number, matrix_t *A) {
+  for (int x = 0; x < A->rows; x += 1) {
+    for (int y = 0; y < A->columns; number += 1.0, y += 1)
+      A->matrix[x][y] = number;
+  }
+}
+
+START_TEST(s21_determinant_06) {
+  double determ = 0.0;
+  matrix_t A = {0};
+
+  s21_create_matrix(8, 8, &A);
+  s21_init_matrix(1.0, &A);
+
+  s21_determinant(&A, &determ);
+  ck_assert_double_eq(determ, 0.0);
+  s21_remove_matrix(&A);
+}
+END_TEST
+
 Suite *s21_determinant_cases(void) {
   Suite *c = suite_create("s21_determinant_cases");
   TCase *tc = tcase_create("s21_determinant_tc");
@@ -125,6 +145,7 @@ Suite *s21_determinant_cases(void) {
   tcase_add_test(tc, s21_determinant_normal3);
   tcase_add_test(tc, s21_determinant_inf);
   tcase_add_test(tc, s21_determinant_inf_neg);
+  tcase_add_test(tc, s21_determinant_06);
   suite_add_tcase(c, tc);
   return c;
 }

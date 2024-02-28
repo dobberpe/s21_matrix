@@ -32,6 +32,15 @@ START_TEST(s21_create_normal) {
 }
 END_TEST
 
+START_TEST(s21_create_matrix_09) {
+  int res = 0;
+  matrix_t A = {0};
+
+  res = s21_create_matrix(-1, 1, &A);
+  ck_assert_int_eq(res, INVALID_MATRIX);
+}
+END_TEST
+
 Suite *s21_create_cases(void) {
   Suite *c = suite_create("s21_create_cases");
   TCase *tc = tcase_create("s21_create_tc");
@@ -39,6 +48,7 @@ Suite *s21_create_cases(void) {
   tcase_add_test(tc, s21_create_zero_rows);
   tcase_add_test(tc, s21_create_zero_columns);
   tcase_add_test(tc, s21_create_normal);
+  tcase_add_test(tc, s21_create_matrix_09);
   suite_add_tcase(c, tc);
   return c;
 }

@@ -3,7 +3,7 @@
 int s21_create_matrix(int rows, int columns, matrix_t *result) {
   int res = OK;
 
-  if (!result || !rows || !columns) {
+  if (!result || rows < 1 || columns < 1) {
     res = INVALID_MATRIX;
     if (result) result->matrix = NULL;
   } else {
@@ -37,11 +37,12 @@ int s21_eq_matrix(matrix_t *A, matrix_t *B) {
     int i = -1;
     while (++i < A->rows && A->matrix[i] && B->matrix[i] && res == SUCCESS) {
       int j = -1;
-      while (++j < A->columns && res == SUCCESS)
+      while (++j < A->columns && res == SUCCESS) {
         res = A->matrix[i][j] == B->matrix[i][j] ||
                       fabs(A->matrix[i][j] - B->matrix[i][j]) < S21_EPS
                   ? SUCCESS
                   : FAILURE;
+      }
     }
     if (i < A->rows && (!A->matrix[i] || !B->matrix[i])) res = FAILURE;
   }
@@ -255,9 +256,11 @@ bool s21_is_triangle(matrix_t *A, int *errno) {
 
 void s21_null_column(matrix_t *A, int j) {
   for (int i = j + 1; i < A->rows; ++i) {
-    double coef = A->matrix[i][j] / A->matrix[j][j];
-    for (int k = j; k < A->columns; ++k) {
-      A->matrix[i][k] -= coef * A->matrix[j][k];
+    if (A->matrix[j][j]) {
+        double coef = A->matrix[i][j] / A->matrix[j][j];
+        for (int k = j; k < A->columns; ++k) {
+            A->matrix[i][k] -= coef * A->matrix[j][k];
+        }
     }
   }
 }
@@ -274,7 +277,10 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
 
   if ((res = s21_determinant(A, &det)) || !det || !result)
     res = res == INVALID_MATRIX || !result ? INVALID_MATRIX : CALCULATION_ERROR;
-  else {
+  else if (A->rows == 1) {
+    s21_create_matrix(1, 1, result);
+    result->matrix[0][0] = 1.0 / A->matrix[0][0];
+  } else {
     matrix_t comp;
     matrix_t T;
     s21_calc_complements(A, &comp);
