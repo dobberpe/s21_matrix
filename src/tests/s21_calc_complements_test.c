@@ -34,6 +34,7 @@ START_TEST(s21_calc_complements_null_pointer_rows) {
   A.matrix[2] = NULL;
   matrix_t result;
   ck_assert_int_eq(s21_calc_complements(&A, &result), INVALID_MATRIX);
+  free(A.matrix);
 }
 END_TEST
 
@@ -46,6 +47,9 @@ START_TEST(s21_calc_complements_normal) {
   s21_create_matrix(3, 3, &check);
   ck_assert_int_eq(s21_calc_complements(&A, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -72,6 +76,9 @@ START_TEST(s21_calc_complements_normal2) {
   matrix_t result;
   ck_assert_int_eq(s21_calc_complements(&A, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -81,6 +88,7 @@ START_TEST(s21_calc_complements_normal3) {
   s21_create_matrix(3, 4, &A);
   matrix_t result;
   ck_assert_int_eq(s21_calc_complements(&A, &result), CALCULATION_ERROR);
+  s21_remove_matrix(&A);
 }
 END_TEST
 
@@ -108,6 +116,9 @@ START_TEST(s21_calc_complements_inf) {
   matrix_t result;
   ck_assert_int_eq(s21_calc_complements(&A, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -135,6 +146,9 @@ START_TEST(s21_calc_complements_inf_neg) {
   matrix_t result;
   ck_assert_int_eq(s21_calc_complements(&A, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 

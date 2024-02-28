@@ -10,6 +10,7 @@ int main() {
   for (Suite **current = suits_list; *current != NULL; current++)
     srunner_add_suite(runner, *current);
 
+  srunner_set_fork_status(runner, CK_NOFORK);
   srunner_run_all(runner, CK_NORMAL);
   number_failed = srunner_ntests_failed(runner);
   srunner_free(runner);

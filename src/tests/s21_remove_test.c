@@ -25,6 +25,7 @@ START_TEST(s21_remove_null_pointer_rows) {
   A.matrix[0] = NULL;
   s21_remove_matrix(&A);
   ck_assert_ptr_eq(A.matrix, NULL);
+  free(A.matrix);
 }
 END_TEST
 

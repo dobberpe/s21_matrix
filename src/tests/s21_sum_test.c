@@ -42,6 +42,7 @@ START_TEST(s21_sum_null_pointer_rows) {
   s21_create_matrix(3, 3, &B);
   ck_assert_int_eq(s21_sum_matrix(&A, &B, &result), INVALID_MATRIX);
   s21_remove_matrix(&B);
+  free(A.matrix);
 }
 END_TEST
 
@@ -56,6 +57,10 @@ START_TEST(s21_sum_normal) {
   s21_create_matrix(3, 3, &check);
   ck_assert_int_eq(s21_sum_matrix(&A, &B, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -67,6 +72,8 @@ START_TEST(s21_sum_normal2) {
   s21_create_matrix(3, 4, &B);
   matrix_t result;
   ck_assert_int_eq(s21_sum_matrix(&A, &B, &result), CALCULATION_ERROR);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
 }
 END_TEST
 
@@ -88,6 +95,10 @@ START_TEST(s21_sum_normal3) {
   matrix_t result;
   ck_assert_int_eq(s21_sum_matrix(&A, &B, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -111,6 +122,10 @@ START_TEST(s21_sum_normal4) {
   matrix_t result;
   ck_assert_int_eq(s21_sum_matrix(&A, &B, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -135,6 +150,10 @@ START_TEST(s21_sum_inf_normal) {
   matrix_t result;
   ck_assert_int_eq(s21_sum_matrix(&A, &B, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -159,6 +178,10 @@ START_TEST(s21_sum_inf_neg_normal) {
   matrix_t result;
   ck_assert_int_eq(s21_sum_matrix(&A, &B, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 

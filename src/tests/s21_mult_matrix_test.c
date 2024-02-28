@@ -38,6 +38,8 @@ START_TEST(s21_mult_matrix_null_pointer_rows) {
   s21_create_matrix(3, 1, &B);
   matrix_t result;
   ck_assert_int_eq(s21_mult_matrix(&A, &B, &result), INVALID_MATRIX);
+  s21_remove_matrix(&B);
+  free(A.matrix);
 }
 END_TEST
 
@@ -53,6 +55,8 @@ START_TEST(s21_mult_matrix_null_pointer_rows2) {
   s21_create_matrix(3, 2, &B);
   matrix_t result;
   ck_assert_int_eq(s21_mult_matrix(&B, &A, &result), INVALID_MATRIX);
+  s21_remove_matrix(&B);
+  free(A.matrix);
 }
 END_TEST
 
@@ -67,6 +71,10 @@ START_TEST(s21_mult_matrix_normal) {
   s21_create_matrix(2, 1, &check);
   ck_assert_int_eq(s21_mult_matrix(&A, &B, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -78,6 +86,8 @@ START_TEST(s21_mult_matrix_normal2) {
   s21_create_matrix(2, 1, &B);
   matrix_t result;
   ck_assert_int_eq(s21_mult_matrix(&A, &B, &result), CALCULATION_ERROR);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
 }
 END_TEST
 
@@ -104,6 +114,10 @@ START_TEST(s21_mult_matrix_normal3) {
   matrix_t result;
   ck_assert_int_eq(s21_mult_matrix(&A, &B, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -138,6 +152,10 @@ START_TEST(s21_mult_matrix_normal4) {
   matrix_t result;
   ck_assert_int_eq(s21_mult_matrix(&A, &B, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -168,6 +186,10 @@ START_TEST(s21_mult_matrix_inf) {
   matrix_t result;
   ck_assert_int_eq(s21_mult_matrix(&A, &B, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -198,6 +220,10 @@ START_TEST(s21_mult_matrix_inf_neg) {
   matrix_t result;
   ck_assert_int_eq(s21_mult_matrix(&A, &B, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 

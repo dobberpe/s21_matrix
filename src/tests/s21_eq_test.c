@@ -30,6 +30,7 @@ START_TEST(s21_eq_null_pointer_rows) {
   matrix_t B;
   s21_create_matrix(3, 3, &B);
   ck_assert_int_eq(s21_eq_matrix(&A, &B), FAILURE);
+  free(A.matrix);
   s21_remove_matrix(&B);
 }
 END_TEST
@@ -41,6 +42,8 @@ START_TEST(s21_eq_normal) {
   matrix_t B;
   s21_create_matrix(3, 3, &B);
   ck_assert_int_eq(s21_eq_matrix(&A, &B), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
 }
 END_TEST
 
@@ -51,6 +54,8 @@ START_TEST(s21_eq_normal2) {
   matrix_t B;
   s21_create_matrix(3, 4, &B);
   ck_assert_int_eq(s21_eq_matrix(&A, &B), FAILURE);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
 }
 END_TEST
 
@@ -67,6 +72,8 @@ START_TEST(s21_eq_normal3) {
     }
   }
   ck_assert_int_eq(s21_eq_matrix(&A, &B), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
 }
 END_TEST
 
@@ -84,6 +91,8 @@ START_TEST(s21_eq_normal4) {
   }
   B.matrix[0][2] = -1;
   ck_assert_int_eq(s21_eq_matrix(&A, &B), FAILURE);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
 }
 END_TEST
 
@@ -102,6 +111,8 @@ START_TEST(s21_eq_inf_normal) {
   A.matrix[0][2] = INFINITY;
   B.matrix[0][2] = INFINITY;
   ck_assert_int_eq(s21_eq_matrix(&A, &B), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
 }
 END_TEST
 
@@ -120,6 +131,8 @@ START_TEST(s21_eq_inf_neg_normal) {
   A.matrix[0][2] = -INFINITY;
   B.matrix[0][2] = -INFINITY;
   ck_assert_int_eq(s21_eq_matrix(&A, &B), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
 }
 END_TEST
 
@@ -138,6 +151,8 @@ START_TEST(s21_eq_inf_neq) {
   A.matrix[0][2] = INFINITY;
   B.matrix[0][2] = -INFINITY;
   ck_assert_int_eq(s21_eq_matrix(&A, &B), FAILURE);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
 }
 END_TEST
 
@@ -155,6 +170,8 @@ START_TEST(s21_eq_nan) {
   }
   B.matrix[0][2] = NAN;
   ck_assert_int_eq(s21_eq_matrix(&A, &B), FAILURE);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
 }
 END_TEST
 
@@ -172,6 +189,8 @@ START_TEST(s21_eq_nan2) {
   }
   B.matrix[0][2] = -NAN;
   ck_assert_int_eq(s21_eq_matrix(&A, &B), FAILURE);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
 }
 END_TEST
 
@@ -190,6 +209,8 @@ START_TEST(s21_eq_nan3) {
   A.matrix[0][2] = NAN;
   B.matrix[0][2] = NAN;
   ck_assert_int_eq(s21_eq_matrix(&A, &B), FAILURE);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&B);
 }
 END_TEST
 

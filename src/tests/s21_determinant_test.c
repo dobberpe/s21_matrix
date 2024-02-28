@@ -34,6 +34,7 @@ START_TEST(s21_determinant_null_pointer_rows) {
   A.matrix[2] = NULL;
   double result;
   ck_assert_int_eq(s21_determinant(&A, &result), INVALID_MATRIX);
+  free(A.matrix);
 }
 END_TEST
 
@@ -44,6 +45,7 @@ START_TEST(s21_determinant_normal) {
   double result;
   ck_assert_int_eq(s21_determinant(&A, &result), OK);
   ck_assert_double_eq_tol(0, result, S21_EPS);
+  s21_remove_matrix(&A);
 }
 END_TEST
 
@@ -63,6 +65,7 @@ START_TEST(s21_determinant_normal2) {
   double result;
   ck_assert_int_eq(s21_determinant(&A, &result), OK);
   ck_assert_double_eq_tol(-198, result, S21_EPS);
+  s21_remove_matrix(&A);
 }
 END_TEST
 
@@ -72,6 +75,7 @@ START_TEST(s21_determinant_normal3) {
   s21_create_matrix(3, 4, &A);
   double result;
   ck_assert_int_eq(s21_determinant(&A, &result), CALCULATION_ERROR);
+  s21_remove_matrix(&A);
 }
 END_TEST
 
@@ -88,6 +92,7 @@ START_TEST(s21_determinant_inf) {
   double result;
   ck_assert_int_eq(s21_determinant(&A, &result), OK);
   ck_assert_double_eq(-INFINITY, result);
+  s21_remove_matrix(&A);
 }
 END_TEST
 
@@ -104,6 +109,7 @@ START_TEST(s21_determinant_inf_neg) {
   double result;
   ck_assert_int_eq(s21_determinant(&A, &result), OK);
   ck_assert_double_eq(INFINITY, result);
+  s21_remove_matrix(&A);
 }
 END_TEST
 

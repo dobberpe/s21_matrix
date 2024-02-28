@@ -34,6 +34,7 @@ START_TEST(s21_mult_number_null_pointer_rows) {
   A.matrix[2] = NULL;
   matrix_t result;
   ck_assert_int_eq(s21_mult_number(&A, 1, &result), INVALID_MATRIX);
+  free(A.matrix);
 }
 END_TEST
 
