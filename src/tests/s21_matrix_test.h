@@ -11,6 +11,7 @@ Suite *s21_remove_cases(void);
 Suite *s21_eq_cases(void);
 Suite *s21_sum_cases(void);
 Suite *s21_sub_cases(void);
+Suite *s21_mult_number_cases(void);
 Suite *s21_mult_matrix_cases(void);
 Suite *s21_transpose_cases(void);
 Suite *s21_calc_complements_cases(void);

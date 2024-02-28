@@ -47,6 +47,9 @@ START_TEST(s21_mult_number_normal) {
   s21_create_matrix(3, 3, &check);
   ck_assert_int_eq(s21_mult_number(&A, 2, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -65,6 +68,9 @@ START_TEST(s21_mult_number_normal2) {
   matrix_t result;
   ck_assert_int_eq(s21_mult_number(&A, 2, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -83,6 +89,9 @@ START_TEST(s21_mult_number_normal3) {
   matrix_t result;
   ck_assert_int_eq(s21_mult_number(&A, 0, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -101,6 +110,9 @@ START_TEST(s21_mult_number_normal4) {
   matrix_t result;
   ck_assert_int_eq(s21_mult_number(&A, -1.5, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -119,6 +131,9 @@ START_TEST(s21_mult_number_inf) {
   matrix_t result;
   ck_assert_int_eq(s21_mult_number(&A, INFINITY, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -137,6 +152,9 @@ START_TEST(s21_mult_number_inf_neg) {
   matrix_t result;
   ck_assert_int_eq(s21_mult_number(&A, -INFINITY, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -155,6 +173,9 @@ START_TEST(s21_mult_number_one_div_by_inf) {
   matrix_t result;
   ck_assert_int_eq(s21_mult_number(&A, 1 / INFINITY, &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 
@@ -173,6 +194,9 @@ START_TEST(s21_mult_number_one_div_by_inf_neg) {
   matrix_t result;
   ck_assert_int_eq(s21_mult_number(&A, 1 / (-INFINITY), &result), OK);
   ck_assert_int_eq(s21_eq_matrix(&check, &result), SUCCESS);
+  s21_remove_matrix(&A);
+  s21_remove_matrix(&check);
+  s21_remove_matrix(&result);
 }
 END_TEST
 

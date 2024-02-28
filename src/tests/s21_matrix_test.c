@@ -10,6 +10,7 @@ int main() {
                          s21_eq_cases(),
                          s21_sum_cases(),
                          s21_sub_cases(),
+                         s21_mult_number_cases(),
                          s21_mult_matrix_cases(),
                          s21_transpose_cases(),
                          s21_calc_complements_cases(),
