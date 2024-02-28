@@ -27,7 +27,6 @@ gcov_report: clean
 	@./gcov_r
 	@python3 -m gcovr -r . --html --html-details -o coverage_report/index.html --exclude test
 	@open coverage_report/index.html
-	@rm -rf gcov_r* *.gcda *.gcno
 
 %.o: %.c
 	@$(CC) $(CFLAGS) -c $< -o $@
@@ -39,7 +38,7 @@ $(LIB_NAME): $(LIB_OBJ)
 	@cat pics/pika.txt
 
 clean:
-	@rm -f $(LIB_OBJ) $(LIB_NAME) $(TEST_OBJ) test gcov* coverage.info *.gcda *.gcno tests/*.gcno
+	@rm -f $(LIB_OBJ) $(LIB_NAME) $(TEST_OBJ) test gcov_r* coverage.info *.gcda *.gcno
 	@rm -rf coverage_report
 
 re: clean all

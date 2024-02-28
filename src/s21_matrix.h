@@ -3,7 +3,6 @@
 
 #include <math.h>
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #define S21_EPS 1E-7
