@@ -1,30 +1,41 @@
 #include "s21_matrix.h"
 
 int s21_create_matrix(int rows, int columns, matrix_t *result) {
-    result->rows = rows;
-    result->columns = columns;
-    result->matrix = (double**)malloc(rows * sizeof(double*));
+    int res = OK;
+    
+    if (!result || !rows || !columns) {
+        res = INVALID_MATRIX;
+        if (result) result->matrix = NULL;
+    } else {
+        result->rows = rows;
+        result->columns = columns;
+        result->matrix = (double**)malloc(rows * sizeof(double*));
 
-    for (int i = 0; i < rows; ++i) result->matrix[i] = (double*)malloc(columns * sizeof(double));
+        for (int i = 0; i < rows; ++i) result->matrix[i] = (double*)calloc(columns, sizeof(double));
+    }
 
-    return OK;
+    return res;
 }
 
 void s21_remove_matrix(matrix_t *A) {
-    for (int i = 0; i < A->rows; ++i) free(A->matrix[i]);
-    free(A->matrix);
+    if (A && A->matrix) {
+        for (int i = 0; i < A->rows; ++i) if (A->matrix[i]) free(A->matrix[i]);
+        free(A->matrix);
+        A->matrix = NULL;
+    }
 }
 
 int s21_eq_matrix(matrix_t *A, matrix_t *B) {
     int res = SUCCESS;
 
-    if (!A->matrix || !B->matrix || A->rows != B->rows || A->columns != B->columns) res = FAILURE;
+    if (!A || !B || !A->matrix || !B->matrix || A->rows != B->rows || A->columns != B->columns || !A->rows || !A->columns) res = FAILURE;
     else {
         int i = -1;
-        while (++i < A->rows && res == SUCCESS) {
+        while (++i < A->rows && A->matrix[i] && B->matrix[i] && res == SUCCESS) {
             int j = -1;
-            while (++j < A->columns && res == SUCCESS) res = fabs(A->matrix[i][j] - B->matrix[i][j]) < S21_EPS ? SUCCESS : FAILURE;
+            while (++j < A->columns && res == SUCCESS) res = A->matrix[i][j] == B->matrix[i][j] || fabs(A->matrix[i][j] - B->matrix[i][j]) < S21_EPS ? SUCCESS : FAILURE;
         }
+        if (i < A->rows && (!A->matrix[i] || !B->matrix[i])) res = FAILURE;
     }
 
     return res;
@@ -33,11 +44,19 @@ int s21_eq_matrix(matrix_t *A, matrix_t *B) {
 int s21_sum_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
     int res = OK;
 
-    if (!A->matrix || !B->matrix) res = INVALID_MATRIX;
+    if (!A || !B || !result || !A->matrix || !B->matrix || !A->rows || !A->columns || !B->rows || !B->columns) res = INVALID_MATRIX;
     else if (A->rows != B->rows || A->columns != B->columns) res = CALCULATION_ERROR;
     else {
         s21_create_matrix(A->rows, A->columns, result);
-        for (int i = 0; i < A->rows; ++i) for (int j = 0; j < A->columns; ++j) result->matrix[i][j] = A->matrix[i][j] + B->matrix[i][j];
+        int i = -1;
+        while (++i < A->rows && A->matrix[i] && B->matrix[i]) {
+            int j = -1;
+            while (++j < A->columns) result->matrix[i][j] = A->matrix[i][j] + B->matrix[i][j];
+        }
+        if (i < A->rows) {
+            res = INVALID_MATRIX;
+            s21_remove_matrix(result);
+        }
     }
 
     return res;
@@ -46,11 +65,19 @@ int s21_sum_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
 int s21_sub_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
     int res = OK;
 
-    if (!A->matrix || !B->matrix) res = INVALID_MATRIX;
+    if (!A || !B || !result || !A->matrix || !B->matrix || !A->rows || !A->columns || !B->rows || !B->columns) res = INVALID_MATRIX;
     else if (A->rows != B->rows || A->columns != B->columns) res = CALCULATION_ERROR;
     else {
         s21_create_matrix(A->rows, A->columns, result);
-        for (int i = 0; i < A->rows; ++i) for (int j = 0; j < A->columns; ++j) result->matrix[i][j] = A->matrix[i][j] - B->matrix[i][j];
+        int i = -1;
+        while (++i < A->rows && A->matrix[i] && B->matrix[i]) {
+            int j = -1;
+            while (++j < A->columns) result->matrix[i][j] = A->matrix[i][j] - B->matrix[i][j];
+        }
+        if (i < A->rows) {
+            res = INVALID_MATRIX;
+            s21_remove_matrix(result);
+        }
     }
 
     return res;
@@ -59,10 +86,15 @@ int s21_sub_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
 int s21_mult_number(matrix_t *A, double number, matrix_t *result) {
     int res = OK;
 
-    if (!A->matrix) res = INVALID_MATRIX;
+    if (!A || !result || !A->matrix || !A->rows || !A->columns) res = INVALID_MATRIX;
     else {
         s21_create_matrix(A->rows, A->columns, result);
-        for (int i = 0; i < A->rows; ++i) for (int j = 0; j < A->columns; ++j) result->matrix[i][j] = A->matrix[i][j] * number;
+        int i = -1;
+        while (++i < A->rows && A->matrix[i]) for (int j = 0; j < A->columns; ++j) result->matrix[i][j] = A->matrix[i][j] * number;
+        if (i < A->rows) {
+            res = INVALID_MATRIX;
+            s21_remove_matrix(result);
+        }
     }
 
     return res;
@@ -71,17 +103,23 @@ int s21_mult_number(matrix_t *A, double number, matrix_t *result) {
 int s21_mult_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
     int res = OK;
 
-    if (!A->matrix || !B->matrix) res = INVALID_MATRIX;
+    if (!A || !B || !result || !A->matrix || !B->matrix || !A->rows || !A->columns || !B->rows || !B->columns) res = INVALID_MATRIX;
     else if (A->columns != B->rows) res = CALCULATION_ERROR;
     else {
         s21_create_matrix(A->rows, B->columns, result);
-        1, 1 * 1, 1 + 1, 2 * 2, 1 + 1, 3 * 3, 1
-        for (int i = 0; i < A->rows; ++i) {
+        int i = -1;
+        while (++i < A->rows && A->matrix[i] && !res) {
             for (int j = 0; j < B->columns; ++j) {
                 double sum = 0;
-                for (int k = 0; k < A->columns; ++k) sum += A->matrix[i][k] * B->matrix[k][j];
+                int k = -1;
+                while (++k < A->columns && B->matrix[k]) sum += A->matrix[i][k] * B->matrix[k][j];
+                if (k < A->columns) res = INVALID_MATRIX;
                 result->matrix[i][j] = sum;
             }
+        }
+        if (i < A->rows || res) {
+            res = INVALID_MATRIX;
+            s21_remove_matrix(result);
         }
     }
 
@@ -91,10 +129,15 @@ int s21_mult_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
 int s21_transpose(matrix_t *A, matrix_t *result) {
     int res = OK;
 
-    if (!A->matrix) res = INVALID_MATRIX;
+    if (!A || !result || !A->matrix || !A->rows || !A->columns) res = INVALID_MATRIX;
     else {
         s21_create_matrix(A->columns, A->rows, result);
-        for (int i = 0; i < A->rows; ++i) for (int j = 0; j < A->columns; ++j) result->matrix[j][i] = A->matrix[i][j];
+        int i = -1;
+        while (++i < A->rows && A->matrix[i]) for (int j = 0; j < A->columns; ++j) result->matrix[j][i] = A->matrix[i][j];
+        if (i < A->rows) {
+            res = INVALID_MATRIX;
+            s21_remove_matrix(result);
+        }
     }
 
     return res;
@@ -103,17 +146,29 @@ int s21_transpose(matrix_t *A, matrix_t *result) {
 int s21_calc_complements(matrix_t *A, matrix_t *result) {
     int res = OK;
 
-    if (!A->matrix || A->rows != A->columns) res = INVALID_MATRIX;
-    else {
+    if (!A || !result || !A->matrix || !A->rows || !A->columns) res = INVALID_MATRIX;
+    else if (A->rows != A->columns) res = CALCULATION_ERROR;
+    else if (A->rows == 1) {
+        s21_create_matrix(1, 1, result);
+        result->matrix[0][0] = A->matrix[0][0];
+    } else {
         s21_create_matrix(A->rows, A->columns, result);
-        for (int i = 0; i < A->rows; ++i) {
+        int i = -1;
+        while (++i < A->rows && A->matrix[i]) {
             for (int j = 0; j < A->columns; ++j) {
                 matrix_t minor = s21_create_minor(A, i, j);
-                s21_determinant(&minor, result->matrix[i][j]);
+                s21_determinant(&minor, &(result->matrix[i][j]));
+                result->matrix[i][j] *= pow(-1, i + j);
                 s21_remove_matrix(&minor);
             }
         }
+        if (i < A->rows) {
+            res = INVALID_MATRIX;
+            s21_remove_matrix(result);
+        }
     }
+
+    return res;
 }
 
 matrix_t s21_create_minor(matrix_t *A, int i, int j) {
@@ -122,37 +177,46 @@ matrix_t s21_create_minor(matrix_t *A, int i, int j) {
 
     for (int k = 0; k < minor.rows; ++k) {
         for (int l = 0; l < minor.columns; ++l) {
-            minor.matrix[k][l] = k == i || l == j ? minor.matrix[k][i] : A->matrix[k > i ? i + 1 : i][l > j ? j + 1 : j];
+            minor.matrix[k][l] = A->matrix[k < i ? k : k + 1][l < j ? l : l + 1];
         }
     }
+
+    return minor;
 }
 
 int s21_determinant(matrix_t *A, double *result) {
     int res = OK;
-    matrix_t A_triangle = {NULL, 0, 0};
 
-    if (!A->matrix || A->rows != A->columns) res = INVALID_MATRIX;
-    else if (!s21_is_triangle(A)) {
-        s21_create_matrix(A->rows, A->columns, &A_triangle);
-        for (int i = 0; i < A->rows; ++i) for (int j = 0; j < A->columns; ++j) A_triangle.matrix[i][j] = A->matrix[i][j];
-        for (int i = 0; i < A->rows; ++i) s21_null_column(&A_triangle, i);
-    }
-
-    *result = calculate_determinant(A_triangle.matrix ? &A_triangle : A);
-    if (A_triangle.matrix) s21_remove_matrix(&A_triangle);;
-}
-
-bool s21_is_triangle(matrix_t *A) {
-    bool res = true;
-
-    if (!A->matrix || A->rows != A->columns) res = false;
+    if (!A || !result || !A->matrix || !A->rows || !A->columns) res = INVALID_MATRIX;
+    else if (A->rows != A->columns) res = CALCULATION_ERROR;
     else {
-        int i = -1;
-        while (++i < A->rows && res) {
-            int j = -1;
-            while (++j < i && res) res = A->matrix[i][j] ? false : true;
+        matrix_t A_triangle = {NULL, 0, 0};
+        
+        if (!s21_is_triangle(A, &res) && !res) {
+            s21_create_matrix(A->rows, A->columns, &A_triangle);
+            for (int i = 0; i < A->rows; ++i) for (int j = 0; j < A->columns; ++j) A_triangle.matrix[i][j] = A->matrix[i][j];
+            for (int i = 0; i < A->rows; ++i) s21_null_column(&A_triangle, i);
+        }
+
+        if (!res) {
+            *result = calculate_determinant(A_triangle.matrix ? &A_triangle : A);
+            if (A_triangle.matrix) s21_remove_matrix(&A_triangle);
         }
     }
+
+    return res;
+}
+
+bool s21_is_triangle(matrix_t *A, int *errno) {
+    bool res = true;
+    
+    int i = -1;
+    while (++i < A->rows && A->matrix[i] && res) {
+        int j = -1;
+        while (++j < i && res) res = A->matrix[i][j] ? false : true;
+    }
+
+    if (i < A->rows && !A->matrix[i]) *errno = INVALID_MATRIX;
 
     return res;
 }
@@ -176,11 +240,15 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
     int res = OK;
     double det;
 
-    if ((res = s21_determinant(A, &det)) || !det) res = !det ? CALCULATION_ERROR : res;
+    if ((res = s21_determinant(A, &det)) || !det || !result) res = res == INVALID_MATRIX || !result ? INVALID_MATRIX : CALCULATION_ERROR;
     else {
+        matrix_t comp;
         matrix_t T;
-        s21_transpose(A, &T);
-        s21_mult_number(T, 1 / det, result);
+        s21_calc_complements(A, &comp);
+        s21_transpose(&comp, &T);
+        s21_remove_matrix(&comp);
+        s21_mult_number(&T, 1.0 / det, result);
+        s21_remove_matrix(&T);
     }
 
     return res;
