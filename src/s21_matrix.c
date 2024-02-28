@@ -257,10 +257,10 @@ bool s21_is_triangle(matrix_t *A, int *errno) {
 void s21_null_column(matrix_t *A, int j) {
   for (int i = j + 1; i < A->rows; ++i) {
     if (A->matrix[j][j]) {
-        double coef = A->matrix[i][j] / A->matrix[j][j];
-        for (int k = j; k < A->columns; ++k) {
-            A->matrix[i][k] -= coef * A->matrix[j][k];
-        }
+      double coef = A->matrix[i][j] / A->matrix[j][j];
+      for (int k = j; k < A->columns; ++k) {
+        A->matrix[i][k] -= coef * A->matrix[j][k];
+      }
     }
   }
 }
