@@ -31,7 +31,7 @@ START_TEST(s21_mult_matrix_null_pointer_rows) {
   matrix_t A;
   A.rows = 2;
   A.columns = 3;
-  A.matrix = (double**)malloc(2 * sizeof(double*));
+  A.matrix = (double **)malloc(2 * sizeof(double *));
   A.matrix[0] = NULL;
   A.matrix[1] = NULL;
   matrix_t B;
@@ -48,7 +48,7 @@ START_TEST(s21_mult_matrix_null_pointer_rows2) {
   matrix_t A;
   A.rows = 2;
   A.columns = 3;
-  A.matrix = (double**)malloc(2 * sizeof(double*));
+  A.matrix = (double **)malloc(2 * sizeof(double *));
   A.matrix[0] = NULL;
   A.matrix[1] = NULL;
   matrix_t B;

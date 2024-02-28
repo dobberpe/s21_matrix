@@ -28,7 +28,7 @@ START_TEST(s21_mult_number_null_pointer_rows) {
   matrix_t A;
   A.rows = 3;
   A.columns = 3;
-  A.matrix = (double**)malloc(3 * sizeof(double*));
+  A.matrix = (double **)malloc(3 * sizeof(double *));
   A.matrix[0] = NULL;
   A.matrix[1] = NULL;
   A.matrix[2] = NULL;

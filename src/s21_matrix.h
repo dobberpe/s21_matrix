@@ -1,25 +1,22 @@
 #ifndef S21_MATRIX_H
 #define S21_MATRIX_H
 
-#include <stdlib.h>
-#include <stdbool.h>
 #include <math.h>
-
-
+#include <stdbool.h>
 #include <stdio.h>
-
+#include <stdlib.h>
 
 #define S21_EPS 1E-7
 #define OK 0
 #define INVALID_MATRIX 1
 #define CALCULATION_ERROR 2
-#define SUCCESS 1                   // s21_eq_matrix
-#define FAILURE 0                   // s21_eq_matrix
+#define SUCCESS 1  // s21_eq_matrix
+#define FAILURE 0  // s21_eq_matrix
 
 typedef struct matrix_struct {
-    double** matrix;
-    int rows;
-    int columns;
+  double **matrix;
+  int rows;
+  int columns;
 } matrix_t;
 
 int s21_create_matrix(int rows, int columns, matrix_t *result);

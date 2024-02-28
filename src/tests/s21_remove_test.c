@@ -21,7 +21,7 @@ START_TEST(s21_remove_null_pointer_rows) {
   // A.matrix = NULL
   matrix_t A;
   A.rows = 1;
-  A.matrix = (double**)malloc(sizeof(double*));
+  A.matrix = (double **)malloc(sizeof(double *));
   A.matrix[0] = NULL;
   s21_remove_matrix(&A);
   ck_assert_ptr_eq(A.matrix, NULL);
