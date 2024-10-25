@@ -270,9 +270,8 @@ int s21_null_column(matrix_t *A, int j) {
       }
       ++i;
     } else if ((swap_row = s21_swap_rows(A, j)) != j) {
-      double tmp;
       for (int l = 0; l < A->columns; ++l) {
-        tmp = A->matrix[j][l];
+        double tmp = A->matrix[j][l];
         A->matrix[j][l] = A->matrix[swap_row][l];
         A->matrix[swap_row][l] = tmp;
       }
