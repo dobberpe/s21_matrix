@@ -30,7 +30,8 @@ int s21_calc_complements(matrix_t *A, matrix_t *result);
 matrix_t s21_create_minor(matrix_t *A, int i, int j);
 int s21_determinant(matrix_t *A, double *result);
 bool s21_is_triangle(matrix_t *A, int *errno);
-void s21_null_column(matrix_t *A, int j);
+int s21_null_column(matrix_t *A, int j);
+int s21_swap_rows(matrix_t *A, int j);
 double calculate_determinant(matrix_t *A);
 int s21_inverse_matrix(matrix_t *A, matrix_t *result);
 

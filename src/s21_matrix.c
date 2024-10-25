@@ -222,17 +222,20 @@ int s21_determinant(matrix_t *A, double *result) {
     res = CALCULATION_ERROR;
   else {
     matrix_t A_triangle = {NULL, 0, 0};
+    int swap_counter = 0;
 
     if (!s21_is_triangle(A, &res) && !res) {
       s21_create_matrix(A->rows, A->columns, &A_triangle);
       for (int i = 0; i < A->rows; ++i)
         for (int j = 0; j < A->columns; ++j)
           A_triangle.matrix[i][j] = A->matrix[i][j];
-      for (int i = 0; i < A->rows; ++i) s21_null_column(&A_triangle, i);
+      for (int i = 0; i < A->rows; ++i)
+        swap_counter += s21_null_column(&A_triangle, i);
     }
 
     if (!res) {
-      *result = calculate_determinant(A_triangle.matrix ? &A_triangle : A);
+      *result = calculate_determinant(A_triangle.matrix ? &A_triangle : A) *
+                pow(-1, swap_counter);
       if (A_triangle.matrix) s21_remove_matrix(&A_triangle);
     }
   }
@@ -254,15 +257,40 @@ bool s21_is_triangle(matrix_t *A, int *errno) {
   return res;
 }
 
-void s21_null_column(matrix_t *A, int j) {
-  for (int i = j + 1; i < A->rows; ++i) {
+int s21_null_column(matrix_t *A, int j) {
+  int i = j + 1;
+  int swap_row;
+  int swap_counter = 0;
+
+  while (i < A->rows) {
     if (A->matrix[j][j]) {
       double coef = A->matrix[i][j] / A->matrix[j][j];
       for (int k = j; k < A->columns; ++k) {
         A->matrix[i][k] -= coef * A->matrix[j][k];
       }
-    }
+      ++i;
+    } else if ((swap_row = s21_swap_rows(A, j)) != j) {
+      double tmp;
+      for (int l = 0; l < A->columns; ++l) {
+        tmp = A->matrix[j][l];
+        A->matrix[j][l] = A->matrix[swap_row][l];
+        A->matrix[swap_row][l] = tmp;
+      }
+      ++swap_counter;
+    } else
+      i = A->rows;
   }
+
+  return swap_counter;
+}
+
+int s21_swap_rows(matrix_t *A, int j) {
+  int i = j;
+  int swap_row = j;
+  while (++i < A->rows && swap_row == j)
+    swap_row = A->matrix[i][j] ? i : swap_row;
+
+  return swap_row;
 }
 
 double calculate_determinant(matrix_t *A) {
